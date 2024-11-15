@@ -36,7 +36,7 @@ const page: FC<{ params: Promise<{uname: string}> }> = async ({ params }) => {
       <div>
         <h1>{projectData.title}</h1>
         <div dangerouslySetInnerHTML={{ __html: articleHTML }} />
-        <Link href={projectData.source_code_link}>Source Code</Link>
+        {projectData.source_code_link && <Link href={projectData.source_code_link}>Source Code</Link>}
       </div>
     )
   } catch {

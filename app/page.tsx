@@ -4,7 +4,7 @@ import Link from 'next/link'
 export const runtime = 'edge'
 
 const getData = async () => {
-  const sql = neon(process.env.NEON_DATABASE_URL as string)  
+  const sql = neon(process.env.DATABASE_URL as string)  
 
   const projects = await sql`
     SELECT uname, title FROM projects

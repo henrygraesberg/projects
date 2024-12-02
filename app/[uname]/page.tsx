@@ -13,7 +13,7 @@ interface DBObject {
 }
 
 const getData = async (uname: string) => {
-  const sql = neon(process.env.NEON_DATABASE_URL as string)  
+  const sql = neon(process.env.DATABASE_URL as string)  
 
   const projectData = await sql`
     SELECT * FROM projects WHERE uname = ${uname}

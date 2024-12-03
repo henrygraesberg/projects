@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { FC } from 'react'
 
+import "./uname.css"
+
 interface DBObject {
   uname: string
   title: string
@@ -24,9 +26,9 @@ const getData = async (uname: string) => {
 const getParsedHTML = async (projectData: DBObject) => {
   const markdown = await fetch(projectData.r2url)
 
-  if (markdown.status !== 200) { throw new Error('Failed to fetch markdown') }
+  if (markdown.status !== 200) { throw new Error('Failed to fetch markdown', { cause: markdown }) }
 
-  return marked.parse(await markdown.text())
+  return marked.parse(await markdown.text(), { async: true })
 }
 
 const page: FC<{ params: Promise<{uname: string}> }> = async ({ params }) => {
@@ -35,10 +37,21 @@ const page: FC<{ params: Promise<{uname: string}> }> = async ({ params }) => {
     const articleHTML = await getParsedHTML(projectData)
 
     return (
-      <div>
-        <h1>{projectData.project_link ? <Link href={projectData.project_link}>{projectData.title}</Link> : projectData.title}</h1>
-        <div dangerouslySetInnerHTML={{ __html: articleHTML }} />
-        {projectData.source_code_link && <Link href={projectData.source_code_link}>Source Code</Link>}
+      <div className="m-4">
+        <h1 className="text-3xl underline text-purple-700 font-bold">{
+        projectData.project_link
+        ?
+        <Link href={projectData.project_link} target="_blank">{projectData.title}</Link>
+        :
+        projectData.title
+        }</h1>
+
+        <div dangerouslySetInnerHTML={{ __html: articleHTML }} className="my-3 markdown" />
+        {
+        projectData.source_code_link
+        &&
+        <Link href={projectData.source_code_link} target="_blank" className="underline text-purple-700 font-bold">Source Code</Link>
+        }
       </div>
     )
   } catch (e) {

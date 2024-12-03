@@ -1,6 +1,7 @@
 import { neon } from '@neondatabase/serverless'
 import { marked } from 'marked'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { FC } from 'react'
 
 interface DBObject {
@@ -19,7 +20,7 @@ const getData = async (uname: string) => {
   return projectData[0] as DBObject
 }
 
-const getHTML = async (projectData: DBObject) => {
+const getParsedHTML = async (projectData: DBObject) => {
   const markdown = await fetch(projectData.r2url)
 
   return marked.parse(await markdown.text())
@@ -28,7 +29,7 @@ const getHTML = async (projectData: DBObject) => {
 const page: FC<{ params: Promise<{uname: string}> }> = async ({ params }) => {
   try {
     const projectData = await getData((await params).uname)
-    const articleHTML = await getHTML(projectData)
+    const articleHTML = await getParsedHTML(projectData)
 
     return (
       <div>
@@ -38,7 +39,7 @@ const page: FC<{ params: Promise<{uname: string}> }> = async ({ params }) => {
       </div>
     )
   } catch {
-    return <div>404</div>
+    return notFound()
   }  
 }
 

@@ -3,8 +3,6 @@ import { marked } from 'marked'
 import Link from 'next/link'
 import { FC } from 'react'
 
-export const runtime = 'edge'
-
 interface DBObject {
   uname: string
   title: string

@@ -1,8 +1,6 @@
 import { neon } from '@neondatabase/serverless'
 import Link from 'next/link'
 
-export const runtime = 'edge'
-
 const getData = async () => {
   const sql = neon(process.env.DATABASE_URL as string)  
 

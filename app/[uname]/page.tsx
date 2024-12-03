@@ -8,7 +8,8 @@ interface DBObject {
   uname: string
   title: string
   r2url: string
-  source_code_link: string
+  source_code_link?: string
+  project_link?: string
 }
 
 const getData = async (uname: string) => {
@@ -23,6 +24,8 @@ const getData = async (uname: string) => {
 const getParsedHTML = async (projectData: DBObject) => {
   const markdown = await fetch(projectData.r2url)
 
+  if (markdown.status !== 200) { throw new Error('Failed to fetch markdown') }
+
   return marked.parse(await markdown.text())
 }
 
@@ -33,12 +36,13 @@ const page: FC<{ params: Promise<{uname: string}> }> = async ({ params }) => {
 
     return (
       <div>
-        <h1>{projectData.title}</h1>
+        <h1>{projectData.project_link ? <Link href={projectData.project_link}>{projectData.title}</Link> : projectData.title}</h1>
         <div dangerouslySetInnerHTML={{ __html: articleHTML }} />
         {projectData.source_code_link && <Link href={projectData.source_code_link}>Source Code</Link>}
       </div>
     )
-  } catch {
+  } catch (e) {
+    console.error(e)
     return notFound()
   }  
 }
